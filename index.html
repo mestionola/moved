@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mestionola — We've Moved!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fbfcf8;
+      --text: #1c1c1e;
+      --text-sub: #5e5e6e;
+      --text-muted: #8e8e9e;
+      --font: 'Lexend', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      max-width: 560px;
+    }
+    .mascot { height: 360px; width: auto; object-fit: contain; pointer-events: none; margin-bottom: 2rem; }
+    .title { font-size: 2.2rem; font-weight: 400; margin-bottom: 0.6rem; }
+    .subtitle { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 1.8rem; line-height: 1.6; }
+    .scramble-line { font-size: 0.95rem; color: var(--text-muted); min-height: 1.6em; letter-spacing: 0.02em; margin-bottom: 2.2rem; }
+    .btn {
+      display: inline-block;
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--text);
+      border: none;
+      padding: 0.8rem 2.4rem;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.8; }
+    .footer {
+      position: fixed;
+      bottom: 0; left: 0; width: 100%;
+      text-align: center;
+      padding: 0.75rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+    @media (max-width: 768px) {
+      .mascot { height: 160px; }
+      .title { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <img src="nola.png" alt="Nola" class="mascot">
+    <h1 class="title">Mestionola Has Moved!</h1>
+    <p class="subtitle">You've found our old address. Mestionola is at a better place now.</p>
+    <p class="scramble-line" id="scramble"></p>
+    <a class="btn" href="https://mestionola.com">Take me to mestionola.com</a>
+  </div>
+  <div class="footer">its okay if you wanna stay here! nola will keep you company</div>
+
+  <script>
+    const touhous = [
+      'Reimu','Marisa','Sakuya','Remilia','Flandre','Youmu','Yuyuko','Alice',
+      'Patchouli','Cirno','Sanae','Reisen','Eirin','Kaguya','Mokou','Aya',
+      'Nitori','Suwako','Kanako','Koishi','Satori','Yuuka','Ran','Yukari',
+      'Chen','Suika','Tenshi','Iku','Hina','Momiji','Kogasa','Nazrin',
+    ];
+    const lines = [
+      "{0} is fired up and ready for work.",
+      "You see {0} smile at you for some reason.",
+      "She looked really happy.",
+      "The sky is refreshingly clear.",
+      "As if a fog clears from your head, you wake up.",
+      "Your morning tea is ready.",
+      "Today's work didn't make much progress.",
+      "She didn't seem interested.",
+      "The Oni are sleeping...",
+      "This isn't interesting at all...",
+      "That was really fun. I want to talk more about it.",
+      "It was definitely the work of youkai.",
+      "Snow flutters around lazily in the air...",
+      "Rain is falling...",
+      "\u300C... Good morning.\u300D",
+      "\u300C... Ehehe...\u300D",
+      "\u300C... Sure, I guess.\u300D",
+      "\u300C... Today was fun as well...\u300D",
+      "\u300CFuwaaa... I'm sleepy.\u300D",
+      "\u300CIsn't it beautiful?\u300D",
+      "\u300C... This is pretty fun, not gonna lie...\u300D",
+      "\u300CWhere to this time? Gensokyo is vast...\u300D",
+      "\u300CFufu, I guess this is nice every once in a while.\u300D",
+      "\u300CHiya, mornin'! Hmm? You still look sleepy, don'tcha?\u300D",
+      "\u300CMy best regards. Let's work together.\u300D",
+    ];
+    function pick(a){return a[Math.floor(Math.random()*a.length)]}
+    let pool=[];
+    function next(){
+      if(!pool.length){
+        const n=pick(touhous);
+        pool=lines.map(l=>l.replaceAll('{0}',n));
+        for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+      }
+      return pool.pop();
+    }
+    const abc='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+    const el=document.getElementById('scramble');
+    let cur='';
+    function rc(){return abc[Math.floor(Math.random()*abc.length)]}
+    function transition(from,to){
+      const buf=Array.from(from),locked=new Set();
+      const order=[...Array(to.length).keys()];
+      for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+      let ri=0,cl=from.length;
+      const iv=setInterval(()=>{
+        if(cl<to.length){cl=Math.min(cl+2,to.length);for(let i=buf.length;i<cl;i++)buf[i]=rc();}
+        else if(cl>to.length){cl=Math.max(cl-2,to.length);buf.length=cl;}
+        if(ri<to.length&&cl>=to.length){
+          const c=2+Math.floor(Math.random()*3);
+          for(let k=0;k<c&&ri<to.length;k++){const p=order[ri];buf[p]=to[p];locked.add(p);ri++;}
+        }
+        for(let i=0;i<cl;i++)if(!locked.has(i))buf[i]=rc();
+        el.textContent=buf.slice(0,cl).join('');
+        if(ri>=to.length&&cl===to.length){el.textContent=to;clearInterval(iv);cur=to;setTimeout(()=>transition(cur,next()),2500);}
+      },25);
+    }
+    transition('',next());
+  </script>
+</body>
+</html>
